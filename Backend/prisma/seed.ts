@@ -14,14 +14,14 @@ async function main() {
   // Crear usuarios de prueba
   const user1 = await prisma.user.create({
     data: {
-      email: "juan@example.com",
+      email: "jhonatan@example.com",
       password: await bcrypt.hash("password123", 10),
     },
   });
 
   const user2 = await prisma.user.create({
     data: {
-      email: "maria@example.com",
+      email: "willy@example.com",
       password: await bcrypt.hash("password123", 10),
     },
   });
