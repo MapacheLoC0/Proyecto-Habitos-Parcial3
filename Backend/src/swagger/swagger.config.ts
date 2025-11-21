@@ -9,6 +9,15 @@ const options = {
       version: "1.0.0",
       description: "Documentación de la API del Gestor de Hábitos",
     },
+    components: {
+      securitySchemes: {
+        BearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+    },
   },
   apis: [
     path.join(__dirname, "../routes/*.ts"),
