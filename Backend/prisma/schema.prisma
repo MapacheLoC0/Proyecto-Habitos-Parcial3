@@ -13,7 +13,18 @@ model Habit {
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
+  progress  Progress[]
 }
+
+model Progress {
+  id        Int      @id @default(autoincrement())
+  habitId   Int
+  date      DateTime @default(now())
+  habit     Habit    @relation(fields: [habitId], references: [id], onDelete: Cascade)
+
+  @@unique([habitId, date])
+}
+
 
 model Routine {
   id        Int      @id @default(autoincrement())
@@ -25,6 +36,7 @@ model Routine {
 
 model User {
   id       Int       @id @default(autoincrement())
+  name     String?
   email    String    @unique
   password String
   habits   Habit[]

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createHabit, getHabits, getHabitById, updateHabit, deleteHabit } from "../controllers/habits.controller";
+import { createHabit, getHabits, getHabitById, updateHabit, deleteHabit, markProgress, getProgress } from "../controllers/habits.controller";
 import authMiddleware from "../middleware/auth.middleware";
 
 const router = Router();
@@ -127,5 +127,9 @@ router.put("/:id", authMiddleware, updateHabit);
  *         description: Hábito no encontrado
  */
 router.delete("/:id", authMiddleware, deleteHabit);
+
+router.post("/:id/progress", markProgress);
+
+router.get("/progress", authMiddleware, getProgress);
 
 export default router;

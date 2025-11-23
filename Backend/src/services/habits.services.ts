@@ -4,7 +4,7 @@ export const createHabit = async (userId: string, data: any) => {
   return prisma.habit.create({
     data: {
       name: data.name,
-      userId: Number(userId),
+      userId: userId,
     },
   });
 };
@@ -31,7 +31,7 @@ export const updateHabit = async (id: number, userId: string, data: any) => {
 };
 
 export const deleteHabit = async (id: number, userId: string) => {
-  return prisma.habit.delete({
-    where: { id },
+  return prisma.habit.deleteMany({
+    where: { id, userId: Number(userId) },
   });
 };

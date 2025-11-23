@@ -1,24 +1,38 @@
-<script setup>
-import { onMounted } from 'vue';
-import { useHabitStore } from '../store/habits';
-
-const habits = useHabitStore();
-
-onMounted(() => {
-  habits.fetchHabits().catch(()=>{});
-});
-</script>
-
 <template>
-  <div>
-    <div class="card">
-      <h2>Progreso de Hábitos</h2>
-      <p>Ves el conteo de progreso por hábito.</p>
-    </div>
+  <div class="p-6 max-w-4xl mx-auto">
+    <h2 class="text-2xl font-bold mb-4">Progreso de Hábitos</h2>
 
-    <div v-for="h in habits.habits" :key="h.id || h._id" class="card" style="margin-top:12px;">
-      <h3>{{ h.name || h.title }}</h3>
-      <p>Días completados: {{ (h.progress && h.progress.length) || 0 }}</p>
+    <div v-if="loading">Cargando...</div>
+
+    <div v-else>
+      <div
+        v-for="item in progress"
+        :key="item.habitId"
+        class="p-4 bg-white shadow rounded mb-3"
+      >
+        <h3 class="font-semibold text-lg">{{ item.name }}</h3>
+        <p class="text-gray-500">Días completados: {{ item.count }}</p>
+      </div>
     </div>
   </div>
 </template>
+
+<script>
+import { useProgressStore } from "../store/progress";
+import { onMounted } from "vue";
+
+export default {
+  setup() {
+    const progressStore = useProgressStore();
+
+    onMounted(() => {
+      progressStore.fetchProgress();
+    });
+
+    return {
+      progress: progressStore.progress,
+      loading: progressStore.loading,
+    };
+  },
+};
+</script>

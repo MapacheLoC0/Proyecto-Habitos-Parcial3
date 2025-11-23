@@ -15,7 +15,9 @@
     "sourceMap": true,
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
-    "types": ["node"]
+
+    "types": ["node"],
+    "typeRoots": ["./src/types", "./node_modules/@types"]   // ← AGREGA ESTO
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]

@@ -1,3 +1,4 @@
+// frontend/vue-project/src/store/habits.js
 import { defineStore } from 'pinia';
 import { api } from '../services/api';   // ← CORREGIDO
 
@@ -60,8 +61,7 @@ export const useHabitStore = defineStore('habits', {
         await api.post(`/habits/${id}/progress`);
         await this.fetchHabits();
       } catch (err) {
-        this.error = err.response?.data?.error || err.message || 'Error al marcar progreso';
-        throw err;
+        alert(err.response?.data?.error || err.message || 'Error al marcar progreso');
       }
     }
   }
