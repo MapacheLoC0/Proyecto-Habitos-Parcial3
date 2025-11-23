@@ -1,4 +1,4 @@
-// src/store/auth.js
+// frontend/vue-project/src/store/auth.js
 import { defineStore } from "pinia";
 import { authService } from "../services/authService";
 import router from "../router";
@@ -69,6 +69,11 @@ export const useAuthStore = defineStore("auth", {
       localStorage.removeItem("token");
 
       router.push("/login");
+    },
+
+    // Método para actualizar el estado de autenticación
+    setAuthenticated(value) {
+      this.isAuthenticated = value;
     },
   },
 });

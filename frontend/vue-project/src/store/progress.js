@@ -15,13 +15,15 @@ export const useProgressStore = defineStore("progress", {
       this.error = null;
 
       try {
-        const res = await api.get("/progress");
+        // CAMBIO: La ruta correcta es /habits/progress
+        const res = await api.get("/habits/progress");
         this.progress = res.data;
       } catch (err) {
         this.error =
           err.response?.data?.error ||
           err.message ||
           "No se pudo cargar el progreso";
+        console.error("Error fetching progress:", err);
       } finally {
         this.loading = false;
       }

@@ -1,10 +1,15 @@
-import e, { Request, Response } from "express";
+import { Request, Response } from "express";
 import * as habitService from "../services/habits.services";
 import prisma from "../config/prisma";
 
 export const createHabit = async (req: Request, res: Response) => {
   try {
-    const habit = await habitService.createHabit(Number(req.user?.id), req.body);
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ error: "No autorizado" });
+    }
+    
+    const habit = await habitService.createHabit(userId, req.body);
     res.json(habit);
   } catch (error: any) {
     res.status(400).json({ error: error.message });
@@ -13,7 +18,12 @@ export const createHabit = async (req: Request, res: Response) => {
 
 export const getHabits = async (req: Request, res: Response) => {
   try {
-    const habits = await habitService.getHabits(Number(req.user?.id));
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ error: "No autorizado" });
+    }
+
+    const habits = await habitService.getHabits(userId);
     res.json(habits);
   } catch (error: any) {
     res.status(400).json({ error: error.message });
@@ -23,7 +33,12 @@ export const getHabits = async (req: Request, res: Response) => {
 export const getHabitById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const habit = await habitService.getHabitById(Number(id), Number(req.user?.id));
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ error: "No autorizado" });
+    }
+
+    const habit = await habitService.getHabitById(Number(id), userId);
     if (!habit) return res.status(404).json({ error: "Hábito no encontrado" });
     res.json(habit);
   } catch (error: any) {
@@ -34,7 +49,12 @@ export const getHabitById = async (req: Request, res: Response) => {
 export const updateHabit = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const habit = await habitService.updateHabit(Number(id), Number(req.user?.id), req.body);
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ error: "No autorizado" });
+    }
+
+    const habit = await habitService.updateHabit(Number(id), userId, req.body);
     res.json(habit);
   } catch (error: any) {
     res.status(400).json({ error: error.message });
@@ -44,7 +64,12 @@ export const updateHabit = async (req: Request, res: Response) => {
 export const deleteHabit = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const result = await habitService.deleteHabit(Number(id), Number(req.user?.id));
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ error: "No autorizado" });
+    }
+
+    const result = await habitService.deleteHabit(Number(id), userId);
 
     if (result.count === 0) {
       return res.status(404).json({ error: "Hábito no encontrado" });
@@ -92,7 +117,13 @@ export const markProgress = async (req: Request, res: Response) => {
 
 export const getProgress = async (req: Request, res: Response) => {
   try {
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ error: "No autorizado" });
+    }
+
     const habits = await prisma.habit.findMany({
+      where: { userId: userId }, // Ya es number
       include: {
         progress: true,
       }
@@ -106,6 +137,7 @@ export const getProgress = async (req: Request, res: Response) => {
 
     res.json(mapped);
   } catch (err) {
+    console.error("Error fetching progress:", err);
     res.status(500).json({ error: "Error al obtener progreso" });
   }
 };

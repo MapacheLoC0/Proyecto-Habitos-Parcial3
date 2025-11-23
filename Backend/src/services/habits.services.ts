@@ -1,27 +1,27 @@
 import prisma from "../config/prisma";
 
-export const createHabit = async (userId: string, data: any) => {
+export const createHabit = async (userId: number, data: any) => {
   return prisma.habit.create({
     data: {
       name: data.name,
-      userId: userId,
+      userId: userId, // Ya es number
     },
   });
 };
 
-export const getHabits = async (userId: string) => {
+export const getHabits = async (userId: number) => {
   return prisma.habit.findMany({
-    where: { userId: Number(userId) },
+    where: { userId: userId }, // Ya es number
   });
 };
 
-export const getHabitById = async (id: number, userId: string) => {
+export const getHabitById = async (id: number, userId: number) => {
   return prisma.habit.findFirst({
-    where: { id, userId: Number(userId) },
+    where: { id, userId: userId }, // Ya es number
   });
 };
 
-export const updateHabit = async (id: number, userId: string, data: any) => {
+export const updateHabit = async (id: number, userId: number, data: any) => {
   return prisma.habit.update({
     where: { id },
     data: {
@@ -30,8 +30,8 @@ export const updateHabit = async (id: number, userId: string, data: any) => {
   });
 };
 
-export const deleteHabit = async (id: number, userId: string) => {
+export const deleteHabit = async (id: number, userId: number) => {
   return prisma.habit.deleteMany({
-    where: { id, userId: Number(userId) },
+    where: { id, userId: userId }, // Ya es number
   });
 };

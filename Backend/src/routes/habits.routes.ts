@@ -1,5 +1,14 @@
+// Backend/src/routes/habits.routes.ts
 import { Router } from "express";
-import { createHabit, getHabits, getHabitById, updateHabit, deleteHabit, markProgress, getProgress } from "../controllers/habits.controller";
+import { 
+  createHabit, 
+  getHabits, 
+  getHabitById, 
+  updateHabit, 
+  deleteHabit, 
+  markProgress,
+  getProgress
+} from "../controllers/habits.controller";
 import authMiddleware from "../middleware/auth.middleware";
 
 const router = Router();
@@ -33,44 +42,11 @@ const router = Router();
  */
 router.post("/", authMiddleware, createHabit);
 
-/**
- * @swagger
- * /api/habits:
- *   get:
- *     tags:
- *       - Hábitos
- *     summary: Obtener todos los hábitos del usuario
- *     security:
- *       - BearerAuth: []
- *     responses:
- *       200:
- *         description: Lista de hábitos
- *       401:
- *         description: No autorizado
- */
 router.get("/", authMiddleware, getHabits);
 
-/**
- * @swagger
- * /api/habits/{id}:
- *   get:
- *     tags:
- *       - Hábitos
- *     summary: Obtener un hábito por ID
- *     security:
- *       - BearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: Hábito encontrado
- *       404:
- *         description: Hábito no encontrado
- */
+// IMPORTANTE: Esta ruta debe ir ANTES de /:id
+router.get("/progress", authMiddleware, getProgress);
+
 router.get("/:id", authMiddleware, getHabitById);
 
 /**
@@ -128,8 +104,42 @@ router.put("/:id", authMiddleware, updateHabit);
  */
 router.delete("/:id", authMiddleware, deleteHabit);
 
-router.post("/:id/progress", markProgress);
+/**
+ * @swagger
+ * /api/habits/{id}/progress:
+ *   post:
+ *     tags:
+ *       - Hábitos
+ *     summary: Marcar progreso en un hábito
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Progreso registrado
+ *       400:
+ *         description: Ya se marcó progreso hoy
+ */
+router.post("/:id/progress", authMiddleware, markProgress);
 
+/**
+ * @swagger
+ * /api/habits/progress:
+ *   get:
+ *     tags:
+ *       - Hábitos
+ *     summary: Obtener progreso de todos los hábitos
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de progreso
+ */
 router.get("/progress", authMiddleware, getProgress);
 
 export default router;
